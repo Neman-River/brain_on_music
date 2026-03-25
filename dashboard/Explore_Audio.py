@@ -4,8 +4,10 @@ import os
 import numpy as np
 import librosa
 import streamlit as st
-from utils.audio import GENRES, get_gtzan_path, load_audio, load_audio_bytes
+from utils.audio import GENRES, get_gtzan_path, load_audio, load_audio_bytes, setup_kaggle_credentials
 from utils.plots import plot_waveform
+
+setup_kaggle_credentials()
 
 st.set_page_config(
     page_title="Music Classification Dashboard",

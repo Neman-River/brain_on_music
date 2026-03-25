@@ -1,17 +1,44 @@
 """Core audio processing functions extracted from genres_features.ipynb."""
 
+import os
 import numpy as np
 import librosa
 import streamlit as st
 
 
-DATA_ROOT = "Data/Data"
 GENRES = ["blues", "classical", "country", "disco", "hiphop", "jazz", "metal", "pop", "reggae", "rock"]
 DEFAULT_TRACK = "00036"
 
 
+def setup_kaggle_credentials() -> None:
+    """Write Kaggle creds from st.secrets to ~/.kaggle/kaggle.json (Streamlit Cloud)."""
+    import json
+    from pathlib import Path
+    if "kaggle" not in st.secrets:
+        return
+    kaggle_dir = Path.home() / ".kaggle"
+    kaggle_dir.mkdir(exist_ok=True)
+    creds = {"username": st.secrets["kaggle"]["username"], "key": st.secrets["kaggle"]["key"]}
+    cred_file = kaggle_dir / "kaggle.json"
+    cred_file.write_text(json.dumps(creds))
+    os.chmod(cred_file, 0o600)
+
+
+@st.cache_resource
+def get_data_root() -> str:
+    """Return local Data/Data if present, else download via kagglehub."""
+    local = "Data/Data"
+    if os.path.isdir(local):
+        return local
+    import kagglehub
+    path = kagglehub.dataset_download(
+        "andradaolteanu/gtzan-dataset-music-genre-classification"
+    )
+    return path
+
+
 def get_gtzan_path(genre: str, track: str = DEFAULT_TRACK) -> str:
-    return f"{DATA_ROOT}/genres_original/{genre}/{genre}.{track}.wav"
+    return f"{get_data_root()}/genres_original/{genre}/{genre}.{track}.wav"
 
 
 @st.cache_data

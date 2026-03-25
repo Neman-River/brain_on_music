@@ -1,11 +1,15 @@
 """Page 5 — Genre Comparison: aggregated EDA from features_30_sec.csv."""
 
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
+from utils.audio import get_data_root
 
 st.set_page_config(page_title="Genre Comparison", page_icon="📊", layout="wide")
 
@@ -16,7 +20,7 @@ st.markdown(
 )
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-CSV_PATH = "Data/Data/features_30_sec.csv"
+CSV_PATH = f"{get_data_root()}/features_30_sec.csv"
 
 @st.cache_data
 def load_features() -> pd.DataFrame:
