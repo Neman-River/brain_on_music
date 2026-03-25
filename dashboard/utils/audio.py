@@ -34,7 +34,8 @@ def get_data_root() -> str:
     path = kagglehub.dataset_download(
         "andradaolteanu/gtzan-dataset-music-genre-classification"
     )
-    return path
+    nested = os.path.join(path, "Data")
+    return nested if os.path.isdir(nested) else path
 
 
 def get_gtzan_path(genre: str, track: str = DEFAULT_TRACK) -> str:
