@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Playwright MCP artifacts
+.playwright-mcp/
+
+# Dataset (1.3 GB — re-download via kagglehub)
+Data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Secrets / credentials
+.env
+*.env
