@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import streamlit as st
 
 st.set_page_config(page_title="Sound Basics", page_icon="🔊", layout="wide")
@@ -86,6 +87,63 @@ st.plotly_chart(_fig_chain, use_container_width=True)
 
 st.divider()
 
+# ── What is Hz? ──────────────────────────────────────────────────────────────
+st.subheader("What is Hz (Hertz)?")
+st.markdown(
+    """
+    **Hz** stands for **Hertz** — the unit of *frequency*, named after physicist Heinrich Hertz.
+    One hertz means **one complete wave cycle per second**.
+
+    | Frequency | What you hear |
+    |-----------|--------------|
+    | 20 Hz | Very deep bass (you feel it more than hear it) |
+    | 440 Hz | A4 — concert tuning pitch (middle A on piano) |
+    | 4,000 Hz | High treble, like a flute's upper register |
+    | 20,000 Hz | Upper limit of human hearing |
+
+    A higher Hz value = **more cycles per second** = **higher pitch**.
+    A lower Hz value = **fewer cycles per second** = **lower pitch**.
+    """,
+)
+
+_t = np.linspace(0, 1, 1000)
+_fig_hz = make_subplots(rows=2, cols=1, shared_xaxes=True,
+                         subplot_titles=["2 Hz — 2 cycles per second",
+                                         "6 Hz — 6 cycles per second"])
+for row, freq in [(1, 2), (2, 6)]:
+    _fig_hz.add_trace(
+        go.Scatter(x=_t, y=np.sin(2*np.pi*freq*_t),
+                   mode="lines", line=dict(color="#1DB954" if row==1 else "#f59e0b", width=2),
+                   showlegend=False),
+        row=row, col=1
+    )
+    for k in range(freq):
+        peak_t = (k + 0.25) / freq
+        _fig_hz.add_annotation(
+            x=peak_t, y=1.0, text=f"↑{k+1}", showarrow=False,
+            font=dict(size=9, color="white"), row=row, col=1
+        )
+_fig_hz.add_shape(type="line", x0=0, x1=1, y0=-1.35, y1=-1.35,
+                   line=dict(color="#aaa", width=1), row=2, col=1,
+                   xref="x2", yref="y2")
+_fig_hz.add_annotation(x=0.5, y=-1.55, text="← 1 second →",
+                        showarrow=False, font=dict(size=11, color="#aaa"),
+                        xref="x2", yref="y2")
+_fig_hz.update_layout(
+    height=280, paper_bgcolor="#0e1117", plot_bgcolor="#0e1117",
+    margin=dict(l=10, r=10, t=30, b=20),
+    font=dict(color="white"),
+)
+for axis in _fig_hz.layout:
+    if axis.startswith("xaxis") or axis.startswith("yaxis"):
+        _fig_hz.layout[axis].update(color="white", gridcolor="#333",
+                                     zerolinecolor="#555",
+                                     tickfont=dict(color="white"),
+                                     title_font=dict(color="white"))
+st.plotly_chart(_fig_hz, use_container_width=True)
+
+st.divider()
+
 # ── Sine wave explorer ────────────────────────────────────────────────────────
 st.subheader("Explore how frequency and amplitude relate to what we hear")
 st.caption(
@@ -112,6 +170,16 @@ ax.xaxis.label.set_color("white")
 ax.yaxis.label.set_color("white")
 ax.title.set_color("white")
 ax.plot(t[:2000], sine[:2000], color="#1DB954", linewidth=1.2)
+period = 1 / freq_hz
+if period < 2000 / demo_sr:
+    ax.annotate("", xy=(period, 0), xytext=(0, 0),
+                arrowprops=dict(arrowstyle="<->", color="#f59e0b", lw=1.5))
+    ax.text(period / 2, ax.get_ylim()[1] * 0.15,
+            f"T = 1/{freq_hz} s", color="#f59e0b", ha="center", fontsize=9)
+ax.annotate("", xy=(0, amplitude), xytext=(0, 0),
+            arrowprops=dict(arrowstyle="<->", color="#a78bfa", lw=1.5))
+ax.text(2000/demo_sr * 0.02, amplitude / 2,
+        f"A = {amplitude}", color="#a78bfa", va="center", fontsize=9)
 ax.set_xlabel("Time (s)")
 ax.set_ylabel("Amplitude")
 ax.set_title(f"Sine wave: {freq_hz} Hz, amplitude={amplitude}")

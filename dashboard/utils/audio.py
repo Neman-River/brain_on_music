@@ -14,7 +14,11 @@ def setup_kaggle_credentials() -> None:
     """Write Kaggle creds from st.secrets to ~/.kaggle/kaggle.json (Streamlit Cloud)."""
     import json
     from pathlib import Path
-    if "kaggle" not in st.secrets:
+    try:
+        has_kaggle = "kaggle" in st.secrets
+    except Exception:
+        return
+    if not has_kaggle:
         return
     kaggle_dir = Path.home() / ".kaggle"
     kaggle_dir.mkdir(exist_ok=True)
