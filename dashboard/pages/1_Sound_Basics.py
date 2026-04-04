@@ -12,7 +12,7 @@ st.set_page_config(page_title="Sound Basics", page_icon="🔊", layout="wide")
 st.title("🎵 Understand Sound")
 st.markdown(
     """
-    Sound is a vibration that travels through the air as a wave of pressure changes.
+    Sound is a mental image created by the brain in response to vibrating molecules in the air.
     When something vibrates — a guitar string, a vocal cord, a speaker — it pushes
     and pulls the surrounding air molecules, creating alternating regions of
     compression and rarefaction that propagate outward. Your ear detects these

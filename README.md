@@ -68,9 +68,21 @@ uv sync
 
 # Launch the dashboard
 uv run streamlit run dashboard/Explore_Audio.py
+
+# Or open the EDA notebook
+uv run jupyter notebook genres_features.ipynb
 ```
 
 The dataset downloads automatically on first run if Kaggle credentials are configured.
+
+**Dataset structure after download:**
+```
+Data/
+├── features_30_sec.csv     # Pre-extracted features
+├── features_3_sec.csv
+├── genres_original/        # Raw WAV files by genre
+└── images_original/
+```
 
 ---
 
